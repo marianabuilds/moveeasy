@@ -42,45 +42,169 @@
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     const PATHS = {
-      "planning|plan-6plus": {
+      /* ── Planning × Timeline × Complexity (12 paths) ─────────────────── */
+      "planning|plan-6plus|solo-local": {
         title: "Early Mover Advantage",
-        context: "You've got the most valuable thing in a move: time. Use these weeks strategically so future-you shows up calm and prepared.",
+        context: "Six weeks is plenty of time. Since it's just you (and maybe a partner), you can move efficiently — here's how to use these weeks well.",
         steps: [
           "Give written move-out notice to your current landlord now — most leases require 30–60 days, and missing this deadline can cost you your deposit.",
-          "Set your move date and lock in a moving company or truck rental — popular weekends and end-of-month dates book up 4–6 weeks out.",
-          "Create a moving budget that covers deposits, movers or truck, packing supplies, and a buffer for surprises.",
-          "Start a declutter pass — one room at a time. What you donate or sell now is one less thing to pack, move, and unpack.",
-          "Research utility providers at your new address: electric, gas, internet. Some require 2–3 week lead times for setup appointments.",
+          "Set your move date and lock in a moving company or truck rental — popular weekends book up 4–6 weeks out.",
+          "Create a lean moving budget: deposit, movers or truck, and supplies. Solo moves are cheaper — no need to overestimate.",
+          "Start a declutter pass — this is your best chance to travel lighter. What you sell now pays for your move.",
+          "Research utility providers at your new address: electric, gas, internet. Some need 2–3 week lead times.",
           "Start collecting free boxes from liquor stores, bookstores, and Buy Nothing groups — this takes longer than it sounds.",
-          "Notify your employer's HR if you need to update your work address for payroll or tax purposes.",
-          "If you have kids or pets, plan their move-day logistics now — who is watching them and where."
+          "Notify your employer's HR of your new address for payroll and tax purposes.",
+          "Measure any large furniture against your new place's doorways and elevator dimensions before move day — surprises are expensive."
         ]
       },
-      "planning|plan-2to6": {
+      "planning|plan-6plus|family": {
+        title: "Early Mover Advantage",
+        context: "Six weeks with kids or pets is actually ideal — you have time to handle the details that make a family move go smoothly. Start with the hardest logistical pieces first.",
+        steps: [
+          "Research school districts and enrollment deadlines at your new address — some require proof of residency and have windows you cannot miss.",
+          "Give written move-out notice to your current landlord now — most leases require 30–60 days.",
+          "Set your move date and book professional movers — family moves need help. Popular dates fill 4–6 weeks out.",
+          "Plan where kids and pets will be on moving day — a relative, a friend, or boarding. Moving day with small kids underfoot is chaos.",
+          "Start a declutter pass room by room — be ruthless about outgrown toys, clothes, and gear before you pack them.",
+          "Notify your children's current school of the transfer date so they can prepare records and transcripts.",
+          "Research utility providers at your new address: electric, gas, and internet. Internet matters especially if kids need it for school.",
+          "Check or get movers' valuation coverage — family moves have more belongings at stake."
+        ]
+      },
+      "planning|plan-6plus|long-distance": {
+        title: "Early Mover Advantage — Long Distance",
+        context: "Long-distance moves have more moving pieces and longer lead times. Six weeks is the right amount of time — if you start now.",
+        steps: [
+          "Book a FMCSA-licensed interstate moving company today — verify credentials at protectyourmove.gov. Long-distance movers book out 4–8 weeks and require in-home estimates.",
+          "Give written move-out notice to your current landlord now — most leases require 30–60 days.",
+          "Decide what furniture makes the trip — long-distance shipping costs by weight. Selling large items and replacing them is often cheaper.",
+          "Research your new city: neighborhoods, commute options, and walkability before committing to a specific area.",
+          "Plan car logistics now: shipping versus driving, and route or overnight stops if driving cross-country.",
+          "Start USPS mail forwarding and update your address with banks, insurance, and subscriptions now — before the move, not after.",
+          "Find a new primary care doctor, dentist, and any specialists at your destination — getting established can take months.",
+          "Research voter registration and DMV requirements in your new state — most require a new license within 30–60 days of establishing residency."
+        ]
+      },
+      "planning|plan-6plus|first-time": {
+        title: "First Move — Solid Foundation",
+        context: "Moving out on your own for the first time is exciting. There's a learning curve on the logistics — here's what you actually need to know first.",
+        steps: [
+          "Read your lease in full before signing — specifically the move-out notice requirement, guest policies, pet rules, and what repairs are your responsibility.",
+          "Get renter's insurance before you move in — typically $15–$20/month, covers everything you own, and many landlords require it.",
+          "Understand that utilities are your responsibility — electric, gas, and internet are not included in rent. Research providers and set up service before move-in day.",
+          "Document the apartment condition at move-in with timestamped photos — every wall, appliance, and existing damage. This protects your security deposit.",
+          "Set a realistic move-in budget: first month's rent + security deposit + moving costs. Most first-timers underestimate this by $500–$1,000.",
+          "Start decluttering what you won't take — first apartments are usually smaller than expected.",
+          "Set your move date and figure out logistics: truck rental, friends, or movers. Book early since end-of-month dates are peak demand.",
+          "Request a move-in walkthrough with your landlord to confirm the unit's condition and get any issues acknowledged in writing."
+        ]
+      },
+      "planning|plan-2to6|solo-local": {
         title: "Getting Ready",
-        context: "You're in the sweet spot — enough time to do this right without rushing. Your job this week is to convert plans into confirmed bookings.",
+        context: "2–6 weeks is a solid window for a local move when it's just you. Your job this week is converting open items into confirmed bookings.",
         steps: [
           "If you haven't booked movers or a truck, do it today — this is your last comfortable window.",
           "Start the USPS mail forwarding process at usps.com — it takes 7–10 business days to activate.",
-          "Schedule utility transfers: give electric, gas, and water your new address and exact start date.",
-          "Schedule internet installation at the new place — providers often have 1–2 week wait times for appointments.",
+          "Schedule utility transfers: electric, gas, and water to your new address with your exact start date.",
+          "Schedule internet installation — providers often have 1–2 week wait times.",
           "Pack non-essential items now: books, out-of-season clothes, decor, extra linens.",
           "Label every box with contents and destination room — future-you will be deeply grateful.",
-          "Confirm your move-in date and key pickup logistics with your landlord or building manager in writing.",
-          "Back up important documents (lease, IDs, insurance cards) digitally or in a folder you carry personally on move day."
+          "Confirm your move-in date and key pickup logistics with your landlord in writing.",
+          "Measure large furniture against your new place's doorways and elevator before move day."
         ]
       },
-      "planning|plan-under2": {
-        title: "Sprint Mode",
-        context: "The runway is short, so we're prioritizing ruthlessly. Focus on what breaks everything if it's not done — everything else can wait.",
+      "planning|plan-2to6|family": {
+        title: "Getting Ready — Family Move",
+        context: "2–6 weeks with kids or pets means logistics need locking in now. The family-specific pieces take longer to arrange, so tackle those first.",
         steps: [
-          "Book movers or a truck today, even if options are limited — whatever is available beats doing it alone.",
+          "Confirm your children's school transfer — contact the current school for records and start enrollment at the new school with proof of your new address.",
+          "Book movers today — family moves need professional help and this is your last comfortable window.",
+          "Plan where kids and/or pets will spend moving day. Book pet boarding now if needed — spots fill fast on popular move weekends.",
+          "Start the USPS mail forwarding process at usps.com — it takes 7–10 business days to activate.",
+          "Schedule utility transfers: electric, gas, water, and internet — kids' schoolwork often depends on connectivity being ready day one.",
+          "Pack kids' rooms last — they need stability. Pack your room and common spaces first.",
+          "Label boxes with contents and destination room. Color-code by family member if it helps.",
+          "Confirm move-in date and key pickup logistics with your landlord in writing."
+        ]
+      },
+      "planning|plan-2to6|long-distance": {
+        title: "Getting Ready — Long Distance",
+        context: "2–6 weeks out for a long-distance move means it's time to confirm and finalize. Stop adding new items — close the open ones.",
+        steps: [
+          "Confirm your interstate moving company booking and get a binding estimate in writing — not a non-binding one.",
+          "Start USPS mail forwarding at usps.com now — it takes 7–10 days and your mail can't wait.",
+          "Update your address with your bank, credit cards, insurance providers, and employer's HR now — before the move, not after.",
+          "Set up utilities at the new address: electric, gas, and internet. Long-distance moves often mean providers you've never dealt with — start now.",
+          "Finalize what furniture is coming and what's being sold or donated — weight drives long-distance moving costs and you can't change this at the last minute.",
+          "If you're shipping a car, confirm the transport company booking and pickup logistics.",
+          "Pack non-essential items now and label every box with contents, room, and a FRAGILE flag where needed.",
+          "Confirm your move-in date and key handoff logistics with your new landlord in writing — you can't easily swing back if something goes wrong."
+        ]
+      },
+      "planning|plan-2to6|first-time": {
+        title: "Getting Ready — First Move",
+        context: "2–6 weeks out on your first move. You have enough time to do this right — here's what first-timers often forget that experienced movers handle automatically.",
+        steps: [
+          "Confirm your move-in date, key pickup time and location, and parking logistics with your landlord in writing.",
+          "Make sure your renter's insurance is active before move-in day — most policies start the same day you request them online.",
+          "Call or go online to set up electric, gas, and internet at your new address — these don't switch on automatically. Give them your exact move-in date.",
+          "Start USPS mail forwarding at usps.com — takes 7–10 days to activate.",
+          "Pack non-essential items now: books, out-of-season clothes, extra linens, decor.",
+          "Figure out what kitchen basics you'll need on day one — don't assume you'll have everything. Make a list and shop before move-in day.",
+          "Plan your moving day logistics — truck rental, friends, or movers. The 1st and 15th of every month are peak demand; avoid if possible.",
+          "Do a pre-move-in walkthrough with timestamped photos before you sign the move-in condition report."
+        ]
+      },
+      "planning|plan-under2|solo-local": {
+        title: "Sprint Mode",
+        context: "Short runway, just you — actually a manageable combo. Prioritize ruthlessly: only do what breaks everything if skipped.",
+        steps: [
+          "Book movers or a truck today — whatever is available, even if not ideal.",
           "Start USPS mail forwarding immediately at usps.com — every day of delay is a day your mail goes to the wrong address.",
           "Pack one full room today. Start with the room you use least.",
-          "Call your utility providers now to schedule cutoff at the old address and start at the new one.",
-          "Schedule internet installation at the new address — explain you need the earliest possible slot.",
-          "Pack a 'move-day essentials' bag you will NOT put in the truck: phone charger, medications, one change of clothes, toiletries, important documents.",
-          "Confirm all logistics with your landlord in writing — key handoff time, parking for the truck, elevator reservations if applicable."
+          "Call utility providers now to schedule cutoff at the old address and start at the new one.",
+          "Schedule internet installation at the new address — ask for the earliest available slot.",
+          "Pack a 'move-day essentials' bag for your car (not the truck): charger, medications, change of clothes, toiletries, important documents.",
+          "Confirm all logistics with your landlord in writing — key handoff time, truck parking, elevator reservation."
+        ]
+      },
+      "planning|plan-under2|family": {
+        title: "Sprint Mode — Family",
+        context: "Under 2 weeks with kids or pets means the adult logistics have to move fast so the family pieces don't get dropped. Do these in order.",
+        steps: [
+          "Book movers immediately — explain you need the earliest available date. Professional help is not optional for a family move this tight.",
+          "Arrange childcare and/or pet boarding for moving day today — don't leave this until the week of.",
+          "Start USPS mail forwarding at usps.com now and notify your children's school of the transfer date.",
+          "Call utility providers to schedule cutoff at the old address and start at the new one, including internet.",
+          "Pack a kids' essentials bag for your car (not the truck): favorite comfort item, medications, chargers, a change of clothes for each child.",
+          "Pack one full room of adult non-essentials today. Kids' rooms pack last — they need stability until move day.",
+          "Confirm move-in date, key handoff, and parking logistics with your landlord in writing."
+        ]
+      },
+      "planning|plan-under2|long-distance": {
+        title: "Sprint Mode — Long Distance",
+        context: "Under 2 weeks for a long-distance move is very tight. Stop evaluating options and start confirming what exists. Speed matters more than optimization right now.",
+        steps: [
+          "Confirm your moving company today — if nothing is booked, call 5–10 companies and take the first available licensed option. A licensed mover beats a scrambled DIY across state lines.",
+          "Finalize what is coming and what is being left behind — you cannot add to the truck at the last minute on a long-distance move.",
+          "Start USPS mail forwarding at usps.com immediately.",
+          "Update your address with your bank, credit cards, and employer today — not after you arrive.",
+          "Set up utilities at the new address now: call electric, gas, and internet providers and explain your timeline; many can expedite.",
+          "Pack a travel bag (goes in your car, not the truck): medications, documents, chargers, change of clothes, toiletries — enough for 3 nights before the truck arrives.",
+          "Confirm all move-in logistics with your new landlord in writing — key handoff, parking, and who to contact if something goes wrong on arrival day."
+        ]
+      },
+      "planning|plan-under2|first-time": {
+        title: "Sprint Mode — First Move",
+        context: "Under 2 weeks on your first move. Here's the short list of things first-timers forget that you absolutely cannot skip.",
+        steps: [
+          "Confirm your lease is signed and you know exactly when and where to pick up keys — do not assume this is handled until you have it in writing.",
+          "Set up your utilities today: call electric, gas, and internet providers for your new address and give them your exact move-in date. These won't turn on automatically.",
+          "Get renter's insurance today — you can get covered in under 10 minutes online. Do it before move-in day.",
+          "Start USPS mail forwarding at usps.com immediately.",
+          "Book moving help today — truck rental, movers, or friends. End-of-month dates are peak; take whatever is available.",
+          "Pack a first-night bag for your car: bedding, towel, phone charger, toiletries, medications, change of clothes. This bag does not go in the truck.",
+          "Do a move-in walkthrough with your landlord (or document with photos if they're not available) and record every existing scratch, stain, or broken item before unpacking."
         ]
       },
       "in-progress|ip-this-week": {
@@ -189,9 +313,24 @@
     };
 
     const Q2_TRANSITION = {
-      "planning":    "Here's your game plan — built for exactly where you are.",
       "in-progress": "Alright, here's your focused priority list. Let's go.",
       "just-moved":  "Got it. Here's what to knock out this week."
+    };
+
+    const Q3_OPTIONS = [
+      { key: "solo-local",    label: "Solo or couple, local move" },
+      { key: "family",        label: "Family with kids or pets" },
+      { key: "long-distance", label: "Long-distance (new city/state)" },
+      { key: "first-time",    label: "First time renting on my own" }
+    ];
+
+    const Q3_QUESTION = "One last thing — what best describes your move?";
+
+    const Q3_TRANSITION = {
+      "solo-local":    "Got it — keeping it lean and focused. Here's your plan.",
+      "family":        "Family moves have more pieces to coordinate. Here's what matters most.",
+      "long-distance": "Long-distance adds a few extra considerations. Here's your tailored plan.",
+      "first-time":    "First move! Here's what first-timers wish they'd known earlier."
     };
 
     /* ── Small UI pieces ──────────────────────────────────────────────── */
@@ -271,8 +410,10 @@
 
     const STORAGE_KEY = "moveeasy_checked";
 
-    function OutputCard({ stage, followUp, onRestart }) {
-      const pathKey = `${stage}|${followUp}`;
+    function OutputCard({ stage, followUp, complexity, onRestart }) {
+      const pathKey = stage === "planning"
+        ? `${stage}|${followUp}|${complexity}`
+        : `${stage}|${followUp}`;
       const path = PATHS[pathKey];
 
       const [checked, setChecked] = useState(() => {
@@ -373,11 +514,12 @@
     const uid = () => ++_id;
 
     function App({ onRestart }) {
-      const [msgs,    setMsgs]    = useState([]);
-      const [typing,  setTyping]  = useState(false);
-      const [phase,   setPhase]   = useState("init");
-      const [stage,   setStage]   = useState(null);
-      const [followUp, setFollowUp] = useState(null);
+      const [msgs,       setMsgs]       = useState([]);
+      const [typing,     setTyping]     = useState(false);
+      const [phase,      setPhase]      = useState("init");
+      const [stage,      setStage]      = useState(null);
+      const [followUp,   setFollowUp]   = useState(null);
+      const [complexity, setComplexity] = useState(null);
       const bottomRef = useRef(null);
 
       const add = (msg) => setMsgs(prev => [...prev, { id: uid(), ...msg }]);
@@ -389,7 +531,7 @@
           add({ type: "bot", text: "Hey! I'm MoveEasy. 👋 I'm going to help you cut through the chaos and figure out exactly what to do next." });
         }, 700);
         const t2 = setTimeout(() => {
-          add({ type: "bot", text: "It'll only take two quick questions — then I'll give you a personalized action plan." });
+          add({ type: "bot", text: "It'll only take a couple of quick questions — then I'll give you a personalized action plan." });
         }, 1500);
         const t3 = setTimeout(() => {
           setTyping(false);
@@ -426,9 +568,33 @@
         setFollowUp(key);
         add({ type: "user", text: Q2_OPTIONS[stage].find(o => o.key === key).label });
         setTyping(true);
+        if (stage === "planning") {
+          setTimeout(() => {
+            setTyping(false);
+            add({ type: "bot", text: "Almost there — one more quick question to make this even more specific." });
+          }, 900);
+          setTimeout(() => {
+            add({ type: "bot", text: Q3_QUESTION });
+            setPhase("q3");
+          }, 1700);
+        } else {
+          setTimeout(() => {
+            setTyping(false);
+            add({ type: "bot", text: Q2_TRANSITION[stage] });
+          }, 900);
+          setTimeout(() => setPhase("done"), 1700);
+        }
+      };
+
+      const handleComplexity = (key) => {
+        if (phase !== "q3") return;
+        setPhase("q3-answered");
+        setComplexity(key);
+        add({ type: "user", text: Q3_OPTIONS.find(o => o.key === key).label });
+        setTyping(true);
         setTimeout(() => {
           setTyping(false);
-          add({ type: "bot", text: Q2_TRANSITION[stage] });
+          add({ type: "bot", text: Q3_TRANSITION[key] });
         }, 900);
         setTimeout(() => setPhase("done"), 1700);
       };
@@ -471,8 +637,12 @@
               <ChoiceButtons options={Q2_OPTIONS[stage]} onSelect={handleFollowUp} />
             )}
 
+            {phase === "q3" && (
+              <ChoiceButtons options={Q3_OPTIONS} onSelect={handleComplexity} />
+            )}
+
             {phase === "done" && stage && followUp && (
-              <OutputCard stage={stage} followUp={followUp} onRestart={onRestart} />
+              <OutputCard stage={stage} followUp={followUp} complexity={complexity} onRestart={onRestart} />
             )}
 
             <div ref={bottomRef} />
