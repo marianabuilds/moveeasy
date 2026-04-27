@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MoveEasy</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    *, body { font-family: 'Inter', system-ui, sans-serif; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.35s ease forwards; }
+
+    @keyframes bounceDot {
+      0%, 80%, 100% { transform: translateY(0);  opacity: 0.4; }
+      40%           { transform: translateY(-5px); opacity: 1;   }
+    }
+    .dot { animation: bounceDot 1.4s ease-in-out infinite; display: block; }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes growBar {
+      from { width: 0; }
+    }
+    .grow-bar { animation: growBar 1s ease-out forwards; }
+
+    @keyframes popIn {
+      0%   { opacity: 0; transform: scale(0.92); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .pop-in { animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  </style>
+</head>
+<body class="bg-purple-50 min-h-screen">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    /* ── Data ─────────────────────────────────────────────────────────── */
+
+    const CHECKLIST = {
+      in: {
+        today: [
+          "Coordinate with movers or helpers for unloading right now",
+          "Set up your bed and bathroom first — rest is non-negotiable",
+          "Find your nearest grocery store and pharmacy before dark"
+        ],
+        "this-week": [
+          "Confirm your exact move-in time with your landlord or building",
+          "Pack a 'first night' bag with clothes, chargers, and toiletries",
+          "Set up utilities and internet before move-in day"
+        ],
+        "2-4-weeks": [
+          "Declutter now — sell, donate, or toss what won't make the trip",
+          "Research internet and utility providers for your new address",
+          "Start USPS mail forwarding — it takes 7–10 days to activate"
+        ],
+        planning: [
+          "Research neighborhoods for commute, vibe, and cost of living",
+          "Build a moving budget (deposits, movers, packing supplies)",
+          "Start collecting boxes and packing tape now — free is easy to find"
+        ]
+      },
+      out: {
+        today: [
+          "Do a final walk-through of every room, closet, and cabinet",
+          "Take timestamped photos of the entire space before you leave",
+          "Return all keys and get written confirmation from your landlord"
+        ],
+        "this-week": [
+          "Pack room by room and label every box with contents + destination",
+          "Contact utilities to stop service on your exact move-out date",
+          "Clean as you go — it's the easiest path to a full deposit return"
+        ],
+        "2-4-weeks": [
+          "Start with items you rarely use — books, decor, off-season clothes",
+          "Book movers or reserve a truck now — dates fill up fast",
+          "Send your landlord official written move-out notice immediately"
+        ],
+        planning: [
+          "Review your lease carefully for notice periods and move-out rules",
+          "Get 3 quotes from moving companies to compare pricing and reviews",
+          "Start decluttering — list things on Marketplace or donate locally"
+        ]
+      }
+    };
+
+    const FRIENDLY_MSG = {
+      in: {
+        today:       "Today's the day! 🎉 Everything feels chaotic right now, but in a few hours you'll be home. Let's make sure you land softly.",
+        "this-week": "So close! Moving in this week is thrilling and a little hectic. You've absolutely got this — one step at a time.",
+        "2-4-weeks": "You've got a solid runway — enough time to plan smart and arrive completely stress-free. That's the sweet spot.",
+        planning:    "Love that you're thinking ahead! The best moves start with early planning. Future-you will be so grateful."
+      },
+      out: {
+        today:       "Moving out today — let's make sure nothing gets left behind and your deposit comes back in full. You're almost free! 🏃",
+        "this-week": "Almost out the door! A little organization now means a much smoother handoff. You've got this.",
+        "2-4-weeks": "Good timing. Two to four weeks is the perfect window to do this right without rushing.",
+        planning:    "Smart to start early. Most move-out surprises happen to people who waited too long. Not you! 💪"
+      }
+    };
+
+    const STAGE = {
+      today:       { label: "Moving Day",    pct: 90 },
+      "this-week": { label: "Almost There",  pct: 65 },
+      "2-4-weeks": { label: "Getting Ready", pct: 40 },
+      planning:    { label: "Early Planning", pct: 15 }
+    };
+
+    const Q1_OPTIONS = [
+      { key: "in",  label: "🏠  Moving IN"  },
+      { key: "out", label: "📦  Moving OUT" }
+    ];
+
+    const Q2_OPTIONS = [
+      { key: "today",       label: "Today 😅"              },
+      { key: "this-week",   label: "This week 📅"           },
+      { key: "2-4-weeks",   label: "2–4 weeks away 📆"      },
+      { key: "planning",    label: "Just planning ahead 🔮"  }
+    ];
+
+    /* ── Small UI pieces ──────────────────────────────────────────────── */
+
+    function Avatar() {
+      return (
+        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-sm font-bold flex-shrink-0 shadow-sm">
+          M
+        </div>
+      );
+    }
+
+    function TypingBubble() {
+      return (
+        <div className="flex items-end gap-2 fade-up">
+          <Avatar />
+          <div className="bg-white border border-purple-100 shadow-sm rounded-2xl rounded-bl-none px-4 py-3.5 flex gap-1.5 items-center">
+            <span className="dot w-2 h-2 bg-purple-400 rounded-full" />
+            <span className="dot w-2 h-2 bg-purple-400 rounded-full" />
+            <span className="dot w-2 h-2 bg-purple-400 rounded-full" />
+          </div>
+        </div>
+      );
+    }
+
+    function BotBubble({ text }) {
+      return (
+        <div className="flex items-end gap-2 fade-up">
+          <Avatar />
+          <div className="max-w-xs sm:max-w-sm bg-white border border-purple-100 shadow-sm rounded-2xl rounded-bl-none px-4 py-2.5 text-sm text-gray-800 leading-relaxed">
+            {text}
+          </div>
+        </div>
+      );
+    }
+
+    function UserBubble({ text }) {
+      return (
+        <div className="flex justify-end fade-up">
+          <div className="max-w-xs sm:max-w-sm bg-purple-600 rounded-2xl rounded-br-none px-4 py-2.5 text-sm text-white leading-relaxed shadow-sm">
+            {text}
+          </div>
+        </div>
+      );
+    }
+
+    function ChoiceButtons({ options, onSelect }) {
+      const [picked, setPicked] = useState(null);
+      const choose = (key) => {
+        if (picked) return;
+        setPicked(key);
+        onSelect(key);
+      };
+      return (
+        <div className="flex flex-wrap gap-2 pl-10 fade-up">
+          {options.map(({ key, label }) => (
+            <button
+              key={key}
+              onClick={() => choose(key)}
+              disabled={!!picked}
+              className={`px-4 py-2 text-sm font-medium rounded-full border transition-all
+                ${picked === key
+                  ? "bg-purple-600 border-purple-600 text-white shadow"
+                  : picked
+                    ? "bg-white border-purple-100 text-purple-300 cursor-default opacity-50"
+                    : "bg-white border-purple-200 text-purple-700 hover:bg-purple-50 hover:border-purple-400 shadow-sm active:scale-95"
+                }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      );
+    }
+
+    /* ── Dashboard card ───────────────────────────────────────────────── */
+
+    function Dashboard({ moveType, timeline, onRestart }) {
+      const [checked, setChecked] = useState([false, false, false]);
+      const [barPct, setBarPct]   = useState(0);
+      const stage    = STAGE[timeline];
+      const items    = CHECKLIST[moveType][timeline];
+      const message  = FRIENDLY_MSG[moveType][timeline];
+      const allDone  = checked.every(Boolean);
+
+      useEffect(() => {
+        const raf = requestAnimationFrame(() => setBarPct(stage.pct));
+        return () => cancelAnimationFrame(raf);
+      }, []);
+
+      const toggle = (i) => setChecked(prev => {
+        const next = [...prev];
+        next[i] = !next[i];
+        return next;
+      });
+
+      return (
+        <div className="pl-10 fade-up">
+          <div className="bg-white rounded-2xl rounded-tl-none border border-purple-100 shadow-md overflow-hidden pop-in">
+
+            {/* Header */}
+            <div className="bg-gradient-to-r from-purple-600 to-purple-700 px-5 py-4 text-white">
+              <p className="text-purple-300 text-xs uppercase tracking-widest font-semibold mb-1">Your Move Stage</p>
+              <h2 className="text-2xl font-bold leading-tight">{stage.label}</h2>
+              <p className="text-purple-200 text-sm mt-0.5">
+                {moveType === "in" ? "🏠 Moving In" : "📦 Moving Out"}
+              </p>
+            </div>
+
+            {/* Progress bar */}
+            <div className="px-5 pt-4 pb-3 border-b border-purple-50">
+              <div className="flex justify-between text-xs text-gray-400 mb-2 font-medium">
+                <span>Planning</span>
+                <span>Moving Day</span>
+              </div>
+              <div className="h-3 bg-purple-100 rounded-full overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-purple-400 to-purple-600 transition-all duration-1000 ease-out"
+                  style={{ width: `${barPct}%` }}
+                />
+              </div>
+              <p className="text-xs text-purple-500 font-medium mt-1.5 text-center">
+                {stage.pct}% through your moving journey
+              </p>
+            </div>
+
+            {/* Friendly message */}
+            <div className="mx-5 mt-4 mb-3 bg-purple-50 rounded-xl px-4 py-3 border border-purple-100">
+              <p className="text-gray-700 text-sm leading-relaxed">{message}</p>
+            </div>
+
+            {/* Checklist */}
+            <div className="px-5 pb-4">
+              <p className="text-xs uppercase tracking-widest text-purple-400 font-semibold mb-3">
+                Your next 3 actions
+              </p>
+              <div className="flex flex-col gap-3.5">
+                {items.map((item, i) => (
+                  <button key={i} onClick={() => toggle(i)} className="flex items-start gap-3 text-left group w-full">
+                    <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 mt-0.5 flex items-center justify-center transition-all duration-200
+                      ${checked[i]
+                        ? "bg-purple-600 border-purple-600"
+                        : "border-purple-300 group-hover:border-purple-500 group-hover:bg-purple-50"
+                      }`}
+                    >
+                      {checked[i] && (
+                        <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </div>
+                    <span className={`text-sm leading-relaxed transition-colors ${
+                      checked[i] ? "line-through text-gray-400" : "text-gray-700 group-hover:text-purple-900"
+                    }`}>
+                      {item}
+                    </span>
+                  </button>
+                ))}
+              </div>
+
+              {allDone && (
+                <div className="mt-4 py-2.5 px-4 bg-purple-50 rounded-xl text-center fade-up">
+                  <p className="text-purple-700 font-semibold text-sm">You're absolutely crushing it! 🎉</p>
+                </div>
+              )}
+            </div>
+
+            {/* Restart */}
+            <div className="border-t border-purple-50 px-5 py-3">
+              <button
+                onClick={onRestart}
+                className="text-xs text-purple-400 hover:text-purple-600 transition-colors w-full text-center"
+              >
+                ↩ Start over
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ── Main chat app ────────────────────────────────────────────────── */
+
+    let _id = 0;
+    const uid = () => ++_id;
+
+    function App({ onRestart }) {
+      const [msgs,    setMsgs]    = useState([]);
+      const [typing,  setTyping]  = useState(false);
+      const [phase,   setPhase]   = useState("init");
+      const [moveType, setMoveType] = useState(null);
+      const [timeline, setTimeline] = useState(null);
+      const bottomRef = useRef(null);
+
+      const add = (msg) => setMsgs(prev => [...prev, { id: uid(), ...msg }]);
+
+      /* Initial greeting sequence */
+      useEffect(() => {
+        setTyping(true);
+        const t1 = setTimeout(() => {
+          add({ type: "bot", text: "Hey there! 👋 I'm MoveEasy — your personal moving companion." });
+        }, 800);
+        const t2 = setTimeout(() => {
+          add({ type: "bot", text: "I'll get you set up in about 30 seconds. Just two quick questions!" });
+        }, 1600);
+        const t3 = setTimeout(() => {
+          setTyping(false);
+          add({ type: "bot", text: "Are you moving IN to a new place, or moving OUT of your current one?" });
+          setPhase("q1");
+        }, 2400);
+        return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+      }, []);
+
+      /* Always scroll to bottom */
+      useEffect(() => {
+        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+      });
+
+      const handleMoveType = (type) => {
+        if (phase !== "q1") return;
+        setPhase("q1-answered");
+        setMoveType(type);
+        add({ type: "user", text: type === "in" ? "🏠 Moving IN" : "📦 Moving OUT" });
+        setTyping(true);
+        setTimeout(() => {
+          setTyping(false);
+          add({ type: "bot", text: type === "in"
+            ? "Exciting! Moving into a new place is such a big deal. 🎊"
+            : "Got it! Moving out is a lot — but totally manageable. 💪"
+          });
+        }, 900);
+        setTimeout(() => {
+          add({ type: "bot", text: "How far away is your move?" });
+          setPhase("q2");
+        }, 1700);
+      };
+
+      const handleTimeline = (tl) => {
+        if (phase !== "q2") return;
+        setPhase("q2-answered");
+        setTimeline(tl);
+        const labels = {
+          today:       "Today 😅",
+          "this-week": "This week",
+          "2-4-weeks": "2–4 weeks away",
+          planning:    "Just planning ahead"
+        };
+        add({ type: "user", text: labels[tl] });
+        setTyping(true);
+        setTimeout(() => {
+          setTyping(false);
+          add({ type: "bot", text: "Perfect — I've put together your personalized moving plan! 📋" });
+        }, 900);
+        setTimeout(() => setPhase("done"), 1700);
+      };
+
+      return (
+        <div className="min-h-screen flex flex-col bg-gradient-to-b from-purple-50 to-white">
+
+          {/* Chat header */}
+          <div className="sticky top-0 z-10 bg-white border-b border-purple-100 shadow-sm">
+            <div className="max-w-lg mx-auto px-4 py-3 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white font-bold text-base shadow">
+                M
+              </div>
+              <div>
+                <h1 className="font-semibold text-gray-900 text-sm leading-none mb-0.5">MoveEasy</h1>
+                <p className="text-xs text-green-500 font-medium">● Online</p>
+              </div>
+              <div className="ml-auto">
+                <span className="text-xs text-purple-300 font-medium">Your moving companion</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Messages */}
+          <div className="flex-1 max-w-lg mx-auto w-full px-4 py-5 flex flex-col gap-3">
+
+            {msgs.map(msg =>
+              msg.type === "bot"
+                ? <BotBubble key={msg.id} text={msg.text} />
+                : <UserBubble key={msg.id} text={msg.text} />
+            )}
+
+            {typing && <TypingBubble />}
+
+            {phase === "q1" && (
+              <ChoiceButtons options={Q1_OPTIONS} onSelect={handleMoveType} />
+            )}
+
+            {phase === "q2" && (
+              <div className="flex flex-col gap-2 pl-10 fade-up">
+                {Q2_OPTIONS.map(({ key, label }) => {
+                  const [picked, setPicked] = useState(null); // handled in ChoiceButtons
+                  return null;
+                })}
+                <ChoiceButtons options={Q2_OPTIONS} onSelect={handleTimeline} />
+              </div>
+            )}
+
+            {phase === "done" && moveType && timeline && (
+              <Dashboard moveType={moveType} timeline={timeline} onRestart={onRestart} />
+            )}
+
+            <div ref={bottomRef} />
+          </div>
+        </div>
+      );
+    }
+
+    /* ── Root wrapper handles restart via key remount ─────────────────── */
+    function Root() {
+      const [key, setKey] = useState(0);
+      return <App key={key} onRestart={() => { _id = 0; setKey(k => k + 1); }} />;
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<Root />);
+  </script>
+</body>
+</html>
