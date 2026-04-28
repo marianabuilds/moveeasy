@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workout Tracker App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: #f5ede6; font-family: 'DM Sans', sans-serif; }
+body { display: flex; min-height: 100vh; }
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+input[type=number] { -moz-appearance: textfield; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- workout-data.jsx -->
+<script type="text/babel">
+// Design tokens - shared across all screens
+const BG = '#f5ede6';
+const CARD = '#ffffff';
+const ACC = '#d4673a';
+const ACC_LIGHT = '#fdf0ea';
+const TEXT = '#1a1208';
+const SUB = '#9e8e7e';
+const BORDER = '#ede5dc';
+
+const WORKOUTS = {
+  Arms: [
+    { name: 'Bicep Curls', sets: 3, reps: 10, rest: '60s', youtubeId: 'ykJmreTEUOU' },
+    { name: 'Tricep Dips', sets: 3, reps: 12, rest: '60s', youtubeId: 'hcJzrv55ygw' },
+    { name: 'Hammer Curls', sets: 3, reps: 10, rest: '45s', youtubeId: '_jF9M-H-9Bc' },
+    { name: 'Overhead Extension', sets: 3, reps: 12, rest: '60s', youtubeId: 'p7wEu1skNAQ' },
+    { name: 'Close-Grip Push-Up', sets: 3, reps: 15, rest: '45s', youtubeId: 'TOyNbVZyXwA' },
+  ],
+  Back: [
+    { name: 'Deadlift', sets: 4, reps: 5, rest: '90s', youtubeId: 'r4MzxtBKyNE' },
+    { name: 'Barbell Row', sets: 3, reps: 8, rest: '60s', youtubeId: 'QhVC_AnZYYM' },
+    { name: 'Pull-Up', sets: 3, reps: 10, rest: '60s', youtubeId: 'eGo4IYlbE5g' },
+    { name: 'Lat Pulldown', sets: 3, reps: 12, rest: '60s', youtubeId: 'qkf4ltXm4Ow' },
+  ],
+  Legs: [
+    { name: 'Back Squat', sets: 4, reps: 5, rest: '90s', youtubeId: 'SwN2P61T2c0' },
+    { name: 'Romanian Deadlift', sets: 3, reps: 8, rest: '60s', youtubeId: '2z-m7HxqYl0' },
+    { name: 'Lunges', sets: 3, reps: 12, rest: '45s', youtubeId: 'Z2ECj1tmo8Y' },
+    { name: 'Calf Raise', sets: 3, reps: 15, rest: '30s', youtubeId: '5pTLE8NG_Ko' },
+  ],
+  'Full Body': [
+    { name: 'Burpees', sets: 3, reps: 10, rest: '60s', youtubeId: 'JZQA0l5aKWc' },
+    { name: 'Kettlebell Swing', sets: 3, reps: 15, rest: '45s', youtubeId: '6YDV4gIKjG4' },
+    { name: 'Push-Up', sets: 3, reps: 12, rest: '45s', youtubeId: '_l3ySLplDTE' },
+    { name: 'Mountain Climbers', sets: 3, reps: 20, rest: '30s', youtubeId: 'nmwgirgXLYM' },
+    { name: 'Box Jump', sets: 3, reps: 8, rest: '60s', youtubeId: 'RDl7H4JnW8w' },
+  ],
+};
+
+const MUSCLE_EMOJI = { Arms: '💪', Back: '🏋️', Legs: '⚡', 'Full Body': '🤸' };
+const INTENSITY_EMOJI = { Easy: '🧘', Moderate: '💪', Hard: '🔥' };
+const INTENSITY_COLOR = { Easy: '#6bbf7a', Moderate: ACC, Hard: '#e04444' };
+
+const DEFAULT_SCHEDULE = {
+  Mon: { type:'workout', muscle:'Back' },
+  Tue: { type:'rest',    muscle:'Arms' },
+  Wed: { type:'workout', muscle:'Arms' },
+  Thu: { type:'rest',    muscle:'Legs' },
+  Fri: { type:'workout', muscle:'Legs' },
+  Sat: { type:'workout', muscle:'Full Body' },
+  Sun: { type:'rest',    muscle:'Arms' },
+};
+
+const INTENSITY_INFO = {
+  Light:    { label: 'Light',    desc: 'Lower weight, higher reps. Great for recovery days.', sets: '2–3 sets', reps: '15–20 reps', color: '#6bbf7a', bg: '#f0fff4' },
+  Moderate: { label: 'Moderate', desc: 'Balanced load. Build strength and endurance together.', sets: '3–4 sets', reps: '10–12 reps', color: '#d4673a', bg: '#fff3ec' },
+  Heavy:    { label: 'Heavy',    desc: 'Max effort. Push your limits and build raw power.',    sets: '4–5 sets', reps: '4–6 reps',   color: '#e04444', bg: '#fff0f0' },
+};
+
+Object.assign(window, { BG, CARD, ACC, ACC_LIGHT, TEXT, SUB, BORDER, WORKOUTS, MUSCLE_EMOJI, INTENSITY_EMOJI, INTENSITY_COLOR, DEFAULT_SCHEDULE, INTENSITY_INFO });
+</script>
+
+<!-- ios-frame.jsx -->
+<script type="text/babel">
+function IOSStatusBar({ dark = false, time = '9:41' }) {
+  const c = dark ? '#fff' : '#000';
+  return (
+    <div style={{
+      display: 'flex', gap: 154, alignItems: 'center', justifyContent: 'center',
+      boxSizing: 'border-box',
+      position: 'relative', zIndex: 20, width: '100%', padding: "21px 24px 19px"
+    }}>
+      <div style={{ flex: 1, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: 1.5 }}>
+        <span style={{
+          fontFamily: '-apple-system, "SF Pro", system-ui', fontWeight: 590,
+          fontSize: 17, lineHeight: '22px', color: c
+        }}>{time}</span>
+      </div>
+      <div style={{ flex: 1, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, paddingTop: 1, paddingRight: 1 }}>
+        <svg width="19" height="12" viewBox="0 0 19 12">
+          <rect x="0" y="7.5" width="3.2" height="4.5" rx="0.7" fill={c} />
+          <rect x="4.8" y="5" width="3.2" height="7" rx="0.7" fill={c} />
+          <rect x="9.6" y="2.5" width="3.2" height="9.5" rx="0.7" fill={c} />
+          <rect x="14.4" y="0" width="3.2" height="12" rx="0.7" fill={c} />
+        </svg>
+        <svg width="17" height="12" viewBox="0 0 17 12">
+          <path d="M8.5 3.2C10.8 3.2 12.9 4.1 14.4 5.6L15.5 4.5C13.7 2.7 11.2 1.5 8.5 1.5C5.8 1.5 3.3 2.7 1.5 4.5L2.6 5.6C4.1 4.1 6.2 3.2 8.5 3.2Z" fill={c} />
+          <path d="M8.5 6.8C9.9 6.8 11.1 7.3 12 8.2L13.1 7.1C11.8 5.9 10.2 5.1 8.5 5.1C6.8 5.1 5.2 5.9 3.9 7.1L5 8.2C5.9 7.3 7.1 6.8 8.5 6.8Z" fill={c} />
+          <circle cx="8.5" cy="10.5" r="1.5" fill={c} />
+        </svg>
+        <svg width="27" height="13" viewBox="0 0 27 13">
+          <rect x="0.5" y="0.5" width="23" height="12" rx="3.5" stroke={c} strokeOpacity="0.35" fill="none" />
+          <rect x="2" y="2" width="20" height="9" rx="2" fill={c} />
+          <path d="M25 4.5V8.5C25.8 8.2 26.5 7.2 26.5 6.5C26.5 5.8 25.8 4.8 25 4.5Z" fill={c} fillOpacity="0.4" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+function IOSGlassPill({ children, dark = false, style = {} }) {
+  return (
+    <div style={{
+      height: 44, minWidth: 44, borderRadius: 9999,
+      position: 'relative', overflow: 'hidden',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      boxShadow: dark ?
+      '0 2px 6px rgba(0,0,0,0.35), 0 6px 16px rgba(0,0,0,0.2)' :
+      '0 1px 3px rgba(0,0,0,0.07), 0 3px 10px rgba(0,0,0,0.06)',
+      ...style
+    }}>
+      <div style={{
+        position: 'absolute', inset: 0, borderRadius: 9999,
+        backdropFilter: 'blur(12px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+        background: dark ? 'rgba(120,120,128,0.28)' : 'rgba(255,255,255,0.5)'
+      }} />
+      <div style={{
+        position: 'absolute', inset: 0, borderRadius: 9999,
+        boxShadow: dark ?
+        'inset 1.5px 1.5px 1px rgba(255,255,255,0.15), inset -1px -1px 1px rgba(255,255,255,0.08)' :
+        'inset 1.5px 1.5px 1px rgba(255,255,255,0.7), inset -1px -1px 1px rgba(255,255,255,0.4)',
+        border: dark ? '0.5px solid rgba(255,255,255,0.15)' : '0.5px solid rgba(0,0,0,0.06)'
+      }} />
+      <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', padding: '0 4px' }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function IOSNavBar({ title = 'Title', dark = false, trailingIcon = true }) {
+  const muted = dark ? 'rgba(255,255,255,0.6)' : '#404040';
+  const text = dark ? '#fff' : '#000';
+  const pillIcon = (content) =>
+    <IOSGlassPill dark={dark}>
+      <div style={{ width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {content}
+      </div>
+    </IOSGlassPill>;
+
+  return (
+    <div style={{
+      display: 'flex', flexDirection: 'column', gap: 10,
+      paddingTop: 62, paddingBottom: 10, position: 'relative', zIndex: 5
+    }}>
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '0 16px'
+      }}>
+        {pillIcon(
+          <svg width="12" height="20" viewBox="0 0 12 20" fill="none" style={{ marginLeft: -1 }}>
+            <path d="M10 2L2 10l8 8" stroke={muted} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        )}
+        {trailingIcon && pillIcon(
+          <svg width="22" height="6" viewBox="0 0 22 6">
+            <circle cx="3" cy="3" r="2.5" fill={muted} />
+            <circle cx="11" cy="3" r="2.5" fill={muted} />
+            <circle cx="19" cy="3" r="2.5" fill={muted} />
+          </svg>
+        )}
+      </div>
+      <div style={{
+        padding: '0 16px',
+        fontFamily: '-apple-system, system-ui',
+        fontSize: 34, fontWeight: 700, lineHeight: '41px',
+        color: text, letterSpacing: 0.4
+      }}>{title}</div>
+    </div>
+  );
+}
+
+function IOSListRow({ title, detail, icon, chevron = true, isLast = false, dark = false }) {
+  const text = dark ? '#fff' : '#000';
+  const sec = dark ? 'rgba(235,235,245,0.6)' : 'rgba(60,60,67,0.6)';
+  const ter = dark ? 'rgba(235,235,245,0.3)' : 'rgba(60,60,67,0.3)';
+  const sep = dark ? 'rgba(84,84,88,0.65)' : 'rgba(60,60,67,0.12)';
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', minHeight: 52,
+      padding: '0 16px', position: 'relative',
+      fontFamily: '-apple-system, system-ui', fontSize: 17,
+      letterSpacing: -0.43
+    }}>
+      {icon &&
+        <div style={{
+          width: 30, height: 30, borderRadius: 7, background: icon,
+          marginRight: 12, flexShrink: 0
+        }} />
+      }
+      <div style={{ flex: 1, color: text }}>{title}</div>
+      {detail && <span style={{ color: sec, marginRight: 6 }}>{detail}</span>}
+      {chevron &&
+        <svg width="8" height="14" viewBox="0 0 8 14" style={{ flexShrink: 0 }}>
+          <path d="M1 1l6 6-6 6" stroke={ter} strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      }
+      {!isLast &&
+        <div style={{
+          position: 'absolute', bottom: 0, right: 0,
+          left: icon ? 58 : 16, height: 0.5, background: sep
+        }} />
+      }
+    </div>
+  );
+}
+
+function IOSList({ header, children, dark = false }) {
+  const hc = dark ? 'rgba(235,235,245,0.6)' : 'rgba(60,60,67,0.6)';
+  const bg = dark ? '#1C1C1E' : '#fff';
+  return (
+    <div>
+      {header &&
+        <div style={{
+          fontFamily: '-apple-system, system-ui', fontSize: 13,
+          color: hc, textTransform: 'uppercase',
+          padding: '8px 36px 6px', letterSpacing: -0.08
+        }}>{header}</div>
+      }
+      <div style={{
+        background: bg, borderRadius: 26,
+        margin: '0 16px', overflow: 'hidden'
+      }}>{children}</div>
+    </div>
+  );
+}
+
+function IOSDevice({ children, width = 402, height = 874, dark = false, title, keyboard = false }) {
+  return (
+    <div style={{
+      width, height, borderRadius: 48, overflow: 'hidden',
+      position: 'relative', background: dark ? '#000' : '#F2F2F7',
+      boxShadow: '0 40px 80px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.12)',
+      fontFamily: '-apple-system, system-ui, sans-serif',
+      WebkitFontSmoothing: 'antialiased'
+    }}>
+      <div style={{
+        position: 'absolute', top: 11, left: '50%', transform: 'translateX(-50%)',
+        width: 126, height: 37, borderRadius: 24, background: '#000', zIndex: 50
+      }} />
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10 }}>
+        <IOSStatusBar dark={dark} />
+      </div>
+      <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+        {title !== undefined && <IOSNavBar title={title} dark={dark} />}
+        <div style={{ flex: 1, overflow: 'auto' }}>{children}</div>
+      </div>
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 60,
+        height: 34, display: 'flex', justifyContent: 'center', alignItems: 'flex-end',
+        paddingBottom: 8, pointerEvents: 'none'
+      }}>
+        <div style={{
+          width: 139, height: 5, borderRadius: 100,
+          background: dark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.25)'
+        }} />
+      </div>
+    </div>
+  );
+}
+
+Object.assign(window, { IOSDevice, IOSStatusBar, IOSNavBar, IOSGlassPill, IOSList, IOSListRow });
+</script>
+
+<!-- tweaks-panel.jsx -->
+<script type="text/babel">
+const __TWEAKS_STYLE = `
+  .twk-panel{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:280px;
+    max-height:calc(100vh - 32px);display:flex;flex-direction:column;
+    background:rgba(250,249,247,.78);color:#29261b;
+    -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
+    border:.5px solid rgba(255,255,255,.6);border-radius:14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 12px 40px rgba(0,0,0,.18);
+    font:11.5px/1.4 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}
+  .twk-hd{display:flex;align-items:center;justify-content:space-between;
+    padding:10px 8px 10px 14px;cursor:move;user-select:none}
+  .twk-hd b{font-size:12px;font-weight:600;letter-spacing:.01em}
+  .twk-x{appearance:none;border:0;background:transparent;color:rgba(41,38,27,.55);
+    width:22px;height:22px;border-radius:6px;cursor:default;font-size:13px;line-height:1}
+  .twk-x:hover{background:rgba(0,0,0,.06);color:#29261b}
+  .twk-body{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px;
+    overflow-y:auto;overflow-x:hidden;min-height:0;
+    scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.15) transparent}
+  .twk-row{display:flex;flex-direction:column;gap:5px}
+  .twk-row-h{flex-direction:row;align-items:center;justify-content:space-between;gap:10px}
+  .twk-lbl{display:flex;justify-content:space-between;align-items:baseline;color:rgba(41,38,27,.72)}
+  .twk-lbl>span:first-child{font-weight:500}
+  .twk-val{color:rgba(41,38,27,.5);font-variant-numeric:tabular-nums}
+  .twk-field{appearance:none;width:100%;height:26px;padding:0 8px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:7px;
+    background:rgba(255,255,255,.6);color:inherit;font:inherit;outline:none}
+  .twk-field:focus{border-color:rgba(0,0,0,.25);background:rgba(255,255,255,.85)}
+  select.twk-field{padding-right:22px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='rgba(0,0,0,.5)' d='M0 0h10L5 6z'/></svg>");
+    background-repeat:no-repeat;background-position:right 8px center}
+  .twk-toggle{position:relative;width:32px;height:18px;border:0;border-radius:999px;
+    background:rgba(0,0,0,.15);transition:background .15s;cursor:default;padding:0}
+  .twk-toggle[data-on="1"]{background:#34c759}
+  .twk-toggle i{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+  .twk-toggle[data-on="1"] i{transform:translateX(14px)}
+  .twk-swatch{appearance:none;-webkit-appearance:none;width:56px;height:22px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:6px;padding:0;cursor:default;
+    background:transparent;flex-shrink:0}
+  .twk-swatch::-webkit-color-swatch-wrapper{padding:0}
+  .twk-swatch::-webkit-color-swatch{border:0;border-radius:5.5px}
+`;
+
+function useTweaks(defaults) {
+  const [values, setValues] = React.useState(defaults);
+  const setTweak = React.useCallback((keyOrEdits, val) => {
+    const edits = typeof keyOrEdits === 'object' && keyOrEdits !== null
+      ? keyOrEdits : { [keyOrEdits]: val };
+    setValues((prev) => ({ ...prev, ...edits }));
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits }, '*');
+  }, []);
+  return [values, setTweak];
+}
+
+function TweaksPanel({ title = 'Tweaks', children }) {
+  const [open, setOpen] = React.useState(false);
+  const dragRef = React.useRef(null);
+  const offsetRef = React.useRef({ x: 16, y: 16 });
+  const PAD = 16;
+
+  const clampToViewport = React.useCallback(() => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const w = panel.offsetWidth, h = panel.offsetHeight;
+    const maxRight = Math.max(PAD, window.innerWidth - w - PAD);
+    const maxBottom = Math.max(PAD, window.innerHeight - h - PAD);
+    offsetRef.current = {
+      x: Math.min(maxRight, Math.max(PAD, offsetRef.current.x)),
+      y: Math.min(maxBottom, Math.max(PAD, offsetRef.current.y)),
+    };
+    panel.style.right = offsetRef.current.x + 'px';
+    panel.style.bottom = offsetRef.current.y + 'px';
+  }, []);
+
+  React.useEffect(() => {
+    const onMsg = (e) => {
+      const t = e?.data?.type;
+      if (t === '__activate_edit_mode') setOpen(true);
+      else if (t === '__deactivate_edit_mode') setOpen(false);
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  const dismiss = () => {
+    setOpen(false);
+    window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');
+  };
+
+  const onDragStart = (e) => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const r = panel.getBoundingClientRect();
+    const sx = e.clientX, sy = e.clientY;
+    const startRight = window.innerWidth - r.right;
+    const startBottom = window.innerHeight - r.bottom;
+    const move = (ev) => {
+      offsetRef.current = {
+        x: startRight - (ev.clientX - sx),
+        y: startBottom - (ev.clientY - sy),
+      };
+      clampToViewport();
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+    };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+  };
+
+  if (!open) return null;
+  return (
+    <>
+      <style>{__TWEAKS_STYLE}</style>
+      <div ref={dragRef} className="twk-panel"
+           style={{ right: offsetRef.current.x, bottom: offsetRef.current.y }}>
+        <div className="twk-hd" onMouseDown={onDragStart}>
+          <b>{title}</b>
+          <button className="twk-x" aria-label="Close tweaks"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onClick={dismiss}>✕</button>
+        </div>
+        <div className="twk-body">{children}</div>
+      </div>
+    </>
+  );
+}
+
+function TweakColor({ label, value, onChange }) {
+  return (
+    <div className="twk-row twk-row-h">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <input type="color" className="twk-swatch" value={value}
+             onChange={(e) => onChange(e.target.value)} />
+    </div>
+  );
+}
+
+function TweakText({ label, value, placeholder, onChange }) {
+  return (
+    <div className="twk-row">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <input className="twk-field" type="text" value={value} placeholder={placeholder}
+             onChange={(e) => onChange(e.target.value)} />
+    </div>
+  );
+}
+
+function TweakSelect({ label, value, options, onChange }) {
+  return (
+    <div className="twk-row">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <select className="twk-field" value={value} onChange={(e) => onChange(e.target.value)}>
+        {options.map((o) => {
+          const v = typeof o === 'object' ? o.value : o;
+          const l = typeof o === 'object' ? o.label : o;
+          return <option key={v} value={v}>{l}</option>;
+        })}
+      </select>
+    </div>
+  );
+}
+
+Object.assign(window, { useTweaks, TweaksPanel, TweakColor, TweakText, TweakSelect });
+</script>
+
+<!-- screen-home.jsx -->
+<script type="text/babel">
+const QUOTES = [
+  { text: "The only way to define your limits is by going beyond them.", author: "Arthur Clarke" },
+  { text: "It never gets easier, you just get better.", author: "Jordan Spieth" },
+  { text: "Champions aren't made in gyms. Champions are made from something deep inside.", author: "Muhammad Ali" },
+  { text: "You don't have to be great to start, but you have to start to be great.", author: "Zig Ziglar" },
+  { text: "What hurts today makes you stronger tomorrow.", author: "Jay Cutler" },
+];
+
+function HomeScreen({ onNavigate, onStartWorkout }) {
+  const [muscle, setMuscle] = React.useState('Arms');
+  const [intState, setIntState] = React.useState('Moderate');
+
+  const muscles = ['Back', 'Arms', 'Legs', 'Full Body'];
+  const intensities = ['Light', 'Moderate', 'Heavy'];
+  const quote = QUOTES[new Date().getDay() % QUOTES.length];
+  const info = INTENSITY_INFO[intState];
+  const exCount = (WORKOUTS[muscle] || []).length;
+  const estMin = exCount * (intState === 'Light' ? 5 : intState === 'Heavy' ? 9 : 7);
+
+  return (
+    <div style={hs.container}>
+      <div style={hs.header}>
+        <div style={hs.subtitle}>TODAY'S PLAN</div>
+        <div style={{ ...hs.title, fontFamily: '"DM Sans"' }}>
+          Let's start with the{'\n'}workout for today,{'\n'}Mariana.
+        </div>
+      </div>
+
+      <div style={hs.quoteCard}>
+        <div style={hs.quoteBar}></div>
+        <div style={hs.quoteInner}>
+          <div style={hs.quoteText}>"{quote.text}"</div>
+          <div style={hs.quoteAuthor}>— {quote.author}</div>
+        </div>
+      </div>
+
+      <div style={hs.filterRow}>
+        {muscles.map((m) =>
+          <div key={m}
+            style={{ ...hs.filterChip, ...(muscle === m ? hs.filterChipActive : {}) }}
+            onClick={() => setMuscle(m)}>
+            {MUSCLE_EMOJI[m]} {m}
+          </div>
+        )}
+      </div>
+
+      <div style={hs.sectionLabel}>INTENSITY</div>
+      <div style={hs.intensityRow}>
+        {intensities.map((lvl) => {
+          const inf = INTENSITY_INFO[lvl];
+          const isActive = intState === lvl;
+          return (
+            <div key={lvl}
+              style={{
+                ...hs.intChip,
+                borderColor: isActive ? inf.color : BORDER,
+                background: isActive ? inf.bg : CARD,
+                color: isActive ? inf.color : SUB
+              }}
+              onClick={() => setIntState(lvl)}>
+              <div style={{ ...hs.intChipDot, background: isActive ? inf.color : BORDER }}></div>
+              {lvl}
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{ ...hs.summaryCard, borderLeftColor: info.color }}>
+        <div style={hs.summaryTop}>
+          <div>
+            <div style={{ ...hs.summaryTitle, fontFamily: '"DM Sans"' }}>{MUSCLE_EMOJI[muscle]} {muscle} — {intState}</div>
+            <div style={hs.summaryDesc}>{info.desc}</div>
+          </div>
+        </div>
+        <div style={hs.summaryStats}>
+          <div style={hs.sumStat}><span style={hs.sumStatNum}>{exCount}</span><span style={hs.sumStatLabel}> exercises</span></div>
+          <div style={hs.sumDot}></div>
+          <div style={hs.sumStat}><span style={hs.sumStatNum}>{info.sets}</span></div>
+          <div style={hs.sumDot}></div>
+          <div style={hs.sumStat}><span style={hs.sumStatNum}>{info.reps}</span></div>
+          <div style={hs.sumDot}></div>
+          <div style={hs.sumStat}><span style={hs.sumStatNum}>~{estMin} min</span></div>
+        </div>
+      </div>
+
+      <div style={{ flex: 1 }}></div>
+
+      <div style={hs.ctaWrap}>
+        <button style={hs.ctaBtn} onClick={() => onStartWorkout(muscle, 0, intState)}>
+          Begin Workout →
+        </button>
+      </div>
+    </div>
+  );
+}
+
+const hs = {
+  container: { background: BG, minHeight: '100vh', display: 'flex', flexDirection: 'column', padding: '60px 60px 40px' },
+  header: { marginBottom: 40, flexShrink: 0 },
+  subtitle: { fontSize: 12, fontWeight: 700, color: ACC, letterSpacing: '0.1em', marginBottom: 12 },
+  title: { fontSize: 40, fontWeight: 800, color: TEXT, letterSpacing: '-0.8px', lineHeight: 1.2, whiteSpace: 'pre-line' },
+  quoteCard: { background: '#fff8f4', border: '1px solid #f2ddd3', borderRadius: 14, display: 'flex', alignItems: 'stretch', overflow: 'hidden', marginBottom: 40, flexShrink: 0, maxWidth: '600px' },
+  quoteBar: { width: 4, background: ACC, flexShrink: 0 },
+  quoteInner: { padding: '16px 18px', flex: 1 },
+  quoteText: { fontSize: 14, color: TEXT, fontStyle: 'italic', lineHeight: 1.6, marginBottom: 6 },
+  quoteAuthor: { fontSize: 12, color: ACC, fontWeight: 700 },
+  sectionLabel: { fontSize: 12, fontWeight: 700, color: SUB, letterSpacing: '0.08em', marginBottom: 12, flexShrink: 0, textTransform: 'uppercase' },
+  filterRow: { display: 'flex', gap: 12, marginBottom: 32, flexShrink: 0, flexWrap: 'wrap' },
+  filterChip: { padding: '10px 18px', borderRadius: 20, border: `1.5px solid ${BORDER}`, fontSize: 14, fontWeight: 600, color: SUB, background: CARD, cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s' },
+  filterChipActive: { background: ACC, color: '#fff', borderColor: ACC },
+  intensityRow: { display: 'flex', gap: 12, marginBottom: 32, flexShrink: 0 },
+  intChip: { flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '12px 0', borderRadius: 12, borderWidth: '1.5px', borderStyle: 'solid', fontSize: 14, fontWeight: 700, cursor: 'pointer', background: CARD, transition: 'all 0.2s' },
+  intChipDot: { width: 8, height: 8, borderRadius: 4 },
+  summaryCard: { background: CARD, borderRadius: 16, padding: '20px', borderLeft: `4px solid ${ACC}`, boxShadow: '0 1px 4px rgba(0,0,0,0.07)', flexShrink: 0, maxWidth: '500px' },
+  summaryTop: { marginBottom: 16 },
+  summaryTitle: { fontSize: 18, fontWeight: 800, color: TEXT, marginBottom: 6 },
+  summaryDesc: { fontSize: 14, color: SUB, lineHeight: 1.5 },
+  summaryStats: { display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' },
+  sumStat: { fontSize: 13, color: TEXT },
+  sumStatNum: { fontWeight: 700, color: TEXT },
+  sumStatLabel: { color: SUB },
+  sumDot: { width: 3, height: 3, borderRadius: 2, background: BORDER },
+  ctaWrap: { marginTop: 40, flexShrink: 0 },
+  ctaBtn: { background: ACC, border: 'none', borderRadius: 16, padding: '16px 32px', fontSize: 16, fontWeight: 700, color: '#fff', cursor: 'pointer', transition: 'all 0.2s', maxWidth: '300px' },
+};
+
+Object.assign(window, { HomeScreen });
+</script>
+
+<!-- screen-log.jsx -->
+<script type="text/babel">
+function AIRecommendation() {
+  const recommendations = [
+    "💪 Based on your schedule: Back day is perfect for building strength. Focus on pulling movements.",
+    "🔥 Progressive overload: Try adding 5 lbs to your barbell rows this week.",
+    "⚡ Rest quality: Ensure 48 hours between back workouts for optimal muscle recovery.",
+    "📈 Volume tracking: You've hit 12 workouts this month—keep the momentum!",
+    "🎯 Mind-muscle connection: Slow down your reps by 2 seconds for better control.",
+  ];
+  const rec = recommendations[Math.floor(Math.random() * recommendations.length)];
+  return (
+    <div style={{ background: '#fff3ec', borderLeft: `4px solid ${ACC}`, borderRadius: 8, padding: '14px 16px', marginBottom: 24, fontSize: 13, color: TEXT, lineHeight: 1.6 }}>
+      <strong>💡 AI Trainer Tip:</strong> {rec}
+    </div>
+  );
+}
+
+function LogScreen({ onNavigate, workoutGroup, intensity }) {
+  const group = workoutGroup || 'Arms';
+  const intLevel = intensity || 'Moderate';
+  const exercises = WORKOUTS[group] || WORKOUTS['Arms'];
+  const intInfo = INTENSITY_INFO[intLevel] || INTENSITY_INFO['Moderate'];
+
+  const [selectedEx, setSelectedEx] = React.useState(null);
+  const [weights, setWeights] = React.useState({});
+  const [notes, setNotes] = React.useState({});
+  const [timeLeft, setTimeLeft] = React.useState(null);
+  const [resting, setResting] = React.useState(false);
+
+  const ex = selectedEx !== null ? exercises[selectedEx] : null;
+  const restSecs = parseInt(ex?.rest) || 60;
+  const totalSets = intLevel === 'Light' ? 2 : intLevel === 'Heavy' ? 5 : 3;
+
+  React.useEffect(() => {
+    if (timeLeft === null || timeLeft <= 0) return;
+    const t = setTimeout(() => setTimeLeft((tl) => tl - 1), 1000);
+    return () => clearTimeout(t);
+  }, [timeLeft]);
+
+  React.useEffect(() => {
+    if (timeLeft === 0 && resting) { setResting(false); setTimeLeft(null); }
+  }, [timeLeft, resting]);
+
+  const fmt = (s) => {
+    const secs = s !== null ? s : restSecs;
+    return `${String(Math.floor(secs / 60)).padStart(2, '0')}:${String(secs % 60).padStart(2, '0')}`;
+  };
+
+  if (selectedEx !== null) {
+    const exKey = `${group}-${selectedEx}`;
+    return (
+      <div style={{ background: BG, minHeight: '100vh', display: 'flex', flexDirection: 'column', padding: 'clamp(24px, 5vw, 60px)', maxWidth: '1200px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 32 }}>
+          <div style={{ fontSize: 18, color: TEXT, cursor: 'pointer', fontWeight: 700 }} onClick={() => setSelectedEx(null)}>←</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 'clamp(20px, 6vw, 32px)', fontWeight: 800, color: TEXT }}>{ex?.name}</div>
+            <div style={{ fontSize: 14, color: SUB, display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
+              {MUSCLE_EMOJI[group]} {group}
+              <span style={{ background: intInfo.bg, color: intInfo.color, borderRadius: 20, padding: '4px 12px', fontSize: 11, fontWeight: 700 }}>{intLevel}</span>
+            </div>
+          </div>
+        </div>
+
+        <iframe
+          width="100%"
+          height="400"
+          src={`https://www.youtube.com/embed/${ex?.youtubeId}?rel=0&modestbranding=1`}
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          style={{ border: 'none', borderRadius: 12, marginBottom: 32 }}
+        ></iframe>
+
+        <div style={{ background: CARD, borderRadius: 16, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 0, marginBottom: 32, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }}>
+          <div style={{ padding: '20px', textAlign: 'center', borderRight: `1px solid ${BORDER}` }}>
+            <div style={{ fontSize: 28, fontWeight: 800, color: TEXT }}>{totalSets}</div>
+            <div style={{ fontSize: 12, color: SUB, marginTop: 4 }}>Sets</div>
+          </div>
+          <div style={{ padding: '20px', textAlign: 'center', borderRight: `1px solid ${BORDER}` }}>
+            <div style={{ fontSize: 28, fontWeight: 800, color: TEXT }}>{ex?.reps}</div>
+            <div style={{ fontSize: 12, color: SUB, marginTop: 4 }}>Reps</div>
+          </div>
+          <div style={{ padding: '20px', textAlign: 'center' }}>
+            <div style={{ fontSize: 28, fontWeight: 800, color: TEXT }}>{ex?.rest}</div>
+            <div style={{ fontSize: 12, color: SUB, marginTop: 4 }}>Rest</div>
+          </div>
+        </div>
+
+        <div style={{ marginBottom: 32 }}>
+          <label style={{ fontSize: 13, fontWeight: 700, color: SUB, display: 'block', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Weight Used</label>
+          <input
+            type="number"
+            placeholder="e.g., 135"
+            value={weights[exKey] || ''}
+            onChange={(e) => setWeights({ ...weights, [exKey]: e.target.value })}
+            style={{ width: '100%', padding: '12px 16px', border: `1.5px solid ${BORDER}`, borderRadius: 8, fontSize: 16, fontFamily: 'inherit', boxSizing: 'border-box' }}
+          />
+        </div>
+
+        <div style={{ marginBottom: 32 }}>
+          <label style={{ fontSize: 13, fontWeight: 700, color: SUB, display: 'block', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Notes</label>
+          <textarea
+            placeholder="How did it feel? Any form cues?"
+            value={notes[exKey] || ''}
+            onChange={(e) => setNotes({ ...notes, [exKey]: e.target.value })}
+            style={{ width: '100%', padding: '12px 16px', border: `1.5px solid ${BORDER}`, borderRadius: 8, fontSize: 14, fontFamily: 'inherit', minHeight: '80px', boxSizing: 'border-box' }}
+          />
+        </div>
+
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', margin: '40px 0' }}>
+          <div style={{ fontSize: 'clamp(48px, 15vw, 96px)', fontWeight: 900, color: TEXT, fontVariantNumeric: 'tabular-nums', letterSpacing: '-2px', fontFamily: 'Georgia, serif' }}>
+            {fmt(timeLeft)}
+          </div>
+          <div style={{ fontSize: 16, color: SUB, marginTop: 8 }}>
+            {resting ? 'Resting...' : 'Ready to work'}
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <button style={{ background: intInfo.color, border: 'none', borderRadius: 16, padding: '16px 24px', fontSize: 16, fontWeight: 700, color: '#fff', cursor: 'pointer', width: '100%' }} onClick={() => { setResting(!resting); if (!resting) setTimeLeft(restSecs); }}>
+            {resting ? 'Resume Set' : 'Start Rest Timer'}
+          </button>
+          {resting && <div style={{ textAlign: 'center', fontSize: 14, color: SUB, cursor: 'pointer', padding: '8px 0' }} onClick={() => { setResting(false); setTimeLeft(null); }}>Skip rest</div>}
+          <button style={{ background: CARD, border: `1.5px solid ${BORDER}`, borderRadius: 16, padding: '16px 24px', fontSize: 16, fontWeight: 700, color: TEXT, cursor: 'pointer', width: '100%' }} onClick={() => setSelectedEx(null)}>← Back to exercises</button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ background: BG, minHeight: '100vh', display: 'flex', flexDirection: 'column', padding: 'clamp(30px, 5vw, 60px)', maxWidth: '1200px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 40, flexWrap: 'wrap' }}>
+        <div style={{ fontSize: 18, color: TEXT, cursor: 'pointer', fontWeight: 700 }} onClick={() => onNavigate('home')}>← Home</div>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 'clamp(24px, 6vw, 32px)', fontWeight: 800, color: TEXT }}>{MUSCLE_EMOJI[group]} {group}</div>
+          <div style={{ fontSize: 14, color: SUB, marginTop: 4 }}>{intLevel} • {intInfo.sets} • {intInfo.reps}</div>
+        </div>
+      </div>
+
+      <AIRecommendation />
+
+      <div style={{ border: '1px solid ' + intInfo.color + '44', borderRadius: 12, display: 'flex', alignItems: 'center', overflow: 'hidden', marginBottom: 40, background: intInfo.bg }}>
+        <div style={{ width: 4, alignSelf: 'stretch', background: intInfo.color, flexShrink: 0 }}></div>
+        <div style={{ padding: '12px 18px', fontSize: 14, color: TEXT, fontWeight: 600 }}>
+          <span style={{ color: intInfo.color, fontWeight: 700 }}>{intLevel}</span>
+          {' · '}{intInfo.sets} · {intInfo.reps}
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+        {exercises.map((exercise, i) =>
+          <div
+            key={i}
+            style={{ background: CARD, borderRadius: 14, display: 'flex', overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.08)', cursor: 'pointer', transition: 'all 0.2s', border: '2px solid transparent', ':hover': { boxShadow: '0 4px 12px rgba(0,0,0,0.15)' } }}
+            onClick={() => setSelectedEx(i)}
+            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+            onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+          >
+            <div style={{ width: 4, alignSelf: 'stretch', background: intInfo.color, flexShrink: 0 }}></div>
+            <div style={{ flex: 1, padding: '20px 18px' }}>
+              <div style={{ fontSize: 18, fontWeight: 800, color: TEXT, marginBottom: 6 }}>{exercise.name}</div>
+              <div style={{ fontSize: 13, color: SUB, marginBottom: 4 }}>{totalSets} sets × {intLevel === 'Light' ? exercise.reps + 5 : intLevel === 'Heavy' ? Math.max(4, exercise.reps - 4) : exercise.reps} reps</div>
+              <div style={{ fontSize: 12, color: SUB, fontWeight: 600 }}>Rest: {exercise.rest}</div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+Object.assign(window, { LogScreen });
+</script>
+
+
+<!-- Main App -->
+<script type="text/babel">
+const TWEAK_DEFAULTS = {
+  "accentColor": "#db4200",
+  "userName": "Mariana",
+  "weightUnit": "kg"
+};
+
+function IconToday({ active }) {
+  const c = active ? '#d4673a' : '#9e8e7e';
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/>
+    </svg>
+  );
+}
+
+function IconTrain({ active }) {
+  const c = active ? '#d4673a' : '#9e8e7e';
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6 5v14M18 5v14"/>
+      <rect x="2" y="8" width="4" height="8" rx="1"/>
+      <rect x="18" y="8" width="4" height="8" rx="1"/>
+      <line x1="6" y1="12" x2="18" y2="12"/>
+    </svg>
+  );
+}
+
+const TABS = [
+  { id: 'home',    label: 'Today',    Icon: IconToday },
+  { id: 'log',     label: 'Train',    Icon: IconTrain },
+];
+
+function TabBar({ active, onSelect }) {
+  return (
+    <div style={{ display: 'flex', background: '#fff', borderTop: '1px solid #ede5dc', padding: '12px 0 20px', gap: 40, justifyContent: 'center' }}>
+      {TABS.map(({ id, label, Icon }) => (
+        <div key={id}
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, cursor: 'pointer' }}
+          onClick={() => onSelect(id)}
+        >
+          <Icon active={active === id} />
+          <span style={{ fontSize: 12, color: active === id ? '#d4673a' : '#9e8e7e', fontWeight: active === id ? 700 : 500 }}>{label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function App() {
+  const [tab, setTab] = React.useState('home');
+  const [workoutGroup, setWorkoutGroup] = React.useState('Arms');
+  const [startExIdx, setStartExIdx] = React.useState(0);
+  const [workoutIntensity, setWorkoutIntensity] = React.useState('Moderate');
+  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+  const [schedule, setScheduleState] = React.useState(() => {
+    try {
+      const saved = localStorage.getItem('wt_schedule');
+      return saved ? JSON.parse(saved) : DEFAULT_SCHEDULE;
+    } catch(e) { return DEFAULT_SCHEDULE; }
+  });
+
+  const setSchedule = (s) => {
+    setScheduleState(s);
+    try { localStorage.setItem('wt_schedule', JSON.stringify(s)); } catch(e) {}
+  };
+
+  const handleStartWorkout = (group, exIdx, intensity) => {
+    setWorkoutGroup(group);
+    setStartExIdx(exIdx || 0);
+    setWorkoutIntensity(intensity || 'Moderate');
+    setTab('log');
+  };
+
+  const renderScreen = () => {
+    switch(tab) {
+      case 'home': return <HomeScreen onNavigate={setTab} onStartWorkout={handleStartWorkout} schedule={schedule} setSchedule={setSchedule} />;
+      case 'log':  return <LogScreen onNavigate={setTab} workoutGroup={workoutGroup} intensity={workoutIntensity} />;
+      default:     return <HomeScreen onNavigate={setTab} onStartWorkout={handleStartWorkout} schedule={schedule} setSchedule={setSchedule} />;
+    }
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: '#f5ede6' }}>
+      <div style={{ flex: 1, overflow: 'auto', position: 'relative' }}>
+        {renderScreen()}
+      </div>
+      <TabBar active={tab} onSelect={setTab} />
+
+      <TweaksPanel title="Tweaks">
+        <TweakColor label="Accent Color" value={tweaks.accentColor} onChange={v => setTweak('accentColor', v)} />
+        <TweakText label="User Name" value={tweaks.userName} onChange={v => setTweak('userName', v)} />
+        <TweakSelect
+          label="Weight Unit"
+          value={tweaks.weightUnit}
+          options={[{ label: 'lbs', value: 'lbs' }, { label: 'kg', value: 'kg' }]}
+          onChange={v => setTweak('weightUnit', v)}
+        />
+      </TweaksPanel>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>
