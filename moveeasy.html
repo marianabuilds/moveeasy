@@ -11,29 +11,30 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     *, body { font-family: 'Inter', system-ui, sans-serif; }
+    body { background: #f7f5f2; }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(8px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    .fade-up { animation: fadeUp 0.35s ease forwards; }
+    .fade-up { animation: fadeUp 0.28s ease forwards; }
 
     @keyframes bounceDot {
-      0%, 80%, 100% { transform: translateY(0);  opacity: 0.4; }
-      40%           { transform: translateY(-5px); opacity: 1;   }
+      0%, 80%, 100% { transform: translateY(0);  opacity: 0.35; }
+      40%           { transform: translateY(-4px); opacity: 1; }
     }
     .dot { animation: bounceDot 1.4s ease-in-out infinite; display: block; }
     .dot:nth-child(2) { animation-delay: 0.2s; }
     .dot:nth-child(3) { animation-delay: 0.4s; }
 
     @keyframes popIn {
-      0%   { opacity: 0; transform: scale(0.92); }
-      100% { opacity: 1; transform: scale(1); }
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
-    .pop-in { animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+    .pop-in { animation: popIn 0.3s ease forwards; }
   </style>
 </head>
-<body class="bg-purple-50 min-h-screen">
+<body>
   <div id="root"></div>
 
   <script type="text/babel">
@@ -48,7 +49,8 @@
         context: "Six weeks is plenty of time. Since it's just you (and maybe a partner), you can move efficiently — here's how to use these weeks well.",
         steps: [
           "Give written move-out notice to your current landlord now — most leases require 30–60 days, and missing this deadline can cost you your deposit.",
-          "Set your move date and lock in a moving company or truck rental — popular weekends book up 4–6 weeks out.",
+          "Set your move date and lock in a moving company or truck rental. Mid-week (Tue/Wed) and mid-month (10th–20th) moves are 20–40% cheaper — avoid weekends and month-end if you have flexibility.",
+          "If hiring movers, book directly with a licensed company — avoid brokers. Brokers inflate prices, aren't liable if things go wrong, and are the #1 source of moving horror stories on Reddit.",
           "Create a lean moving budget: deposit, movers or truck, and supplies. Solo moves are cheaper — no need to overestimate.",
           "Start a declutter pass — this is your best chance to travel lighter. What you sell now pays for your move.",
           "Research utility providers at your new address: electric, gas, internet. Some need 2–3 week lead times.",
@@ -63,7 +65,7 @@
         steps: [
           "Research school districts and enrollment deadlines at your new address — some require proof of residency and have windows you cannot miss.",
           "Give written move-out notice to your current landlord now — most leases require 30–60 days.",
-          "Set your move date and book professional movers — family moves need help. Popular dates fill 4–6 weeks out.",
+          "Set your move date and book professional movers directly — family moves need help. Mid-week (Tue/Wed) and mid-month (10th–20th) are 20–40% cheaper. Book directly with a licensed company, not a broker — brokers are the #1 source of hidden fees and no-shows.",
           "Plan where kids and pets will be on moving day — a relative, a friend, or boarding. Moving day with small kids underfoot is chaos.",
           "Start a declutter pass room by room — be ruthless about outgrown toys, clothes, and gear before you pack them.",
           "Notify your children's current school of the transfer date so they can prepare records and transcripts.",
@@ -75,7 +77,7 @@
         title: "Early Mover Advantage — Long Distance",
         context: "Long-distance moves have more moving pieces and longer lead times. Six weeks is the right amount of time — if you start now.",
         steps: [
-          "Book a FMCSA-licensed interstate moving company today — verify credentials at protectyourmove.gov. Long-distance movers book out 4–8 weeks and require in-home estimates.",
+          "Book a FMCSA-licensed interstate moving company today — verify at protectyourmove.gov. Do NOT use a broker; brokers don't move your stuff, they sell your job to the lowest bidder and aren't liable when it goes wrong. Book directly and get a binding estimate.",
           "Give written move-out notice to your current landlord now — most leases require 30–60 days.",
           "Decide what furniture makes the trip — long-distance shipping costs by weight. Selling large items and replacing them is often cheaper.",
           "Research your new city: neighborhoods, commute options, and walkability before committing to a specific area.",
@@ -95,7 +97,7 @@
           "Document the apartment condition at move-in with timestamped photos — every wall, appliance, and existing damage. This protects your security deposit.",
           "Set a realistic move-in budget: first month's rent + security deposit + moving costs. Most first-timers underestimate this by $500–$1,000.",
           "Start decluttering what you won't take — first apartments are usually smaller than expected.",
-          "Set your move date and figure out logistics: truck rental, friends, or movers. Book early since end-of-month dates are peak demand.",
+          "Set your move date and figure out logistics: truck rental, friends, or movers. Mid-week (Tue/Wed) and mid-month (10th–20th) are 20–40% cheaper and easier to book. If hiring movers, book directly with a licensed company — avoid brokers.",
           "Request a move-in walkthrough with your landlord to confirm the unit's condition and get any issues acknowledged in writing."
         ]
       },
@@ -108,7 +110,9 @@
           "Schedule utility transfers: electric, gas, and water to your new address with your exact start date.",
           "Schedule internet installation — providers often have 1–2 week wait times.",
           "Pack non-essential items now: books, out-of-season clothes, decor, extra linens.",
-          "Label every box with contents and destination room — future-you will be deeply grateful.",
+          "Label every box with contents and destination room, and number them. Reddit pro tip: photograph the inside of each box before sealing — if anything disappears, you'll know exactly what was in it.",
+          "For hanging clothes, don't take them off hangers. Pull a garbage bag up from the bottom of a section, leaving hangers in. They transport instantly and re-hang in minutes.",
+          "When disassembling furniture, put all screws and hardware in a labeled ziplock bag and tape it directly to that piece. You'll thank yourself on assembly day.",
           "Confirm your move-in date and key pickup logistics with your landlord in writing.",
           "Measure large furniture against your new place's doorways and elevator before move day."
         ]
@@ -123,7 +127,9 @@
           "Start the USPS mail forwarding process at usps.com — it takes 7–10 business days to activate.",
           "Schedule utility transfers: electric, gas, water, and internet — kids' schoolwork often depends on connectivity being ready day one.",
           "Pack kids' rooms last — they need stability. Pack your room and common spaces first.",
-          "Label boxes with contents and destination room. Color-code by family member if it helps.",
+          "Label boxes with contents and destination room, and number them. Photograph inside each box before sealing so you know exactly what's in every numbered box.",
+          "For hanging clothes, skip the folding: pull a garbage bag up from the bottom of a section of hangers, tie at the top, and transport. They re-hang in seconds.",
+          "When disassembling furniture, put all screws and hardware in a labeled ziplock bag and tape it to that piece of furniture — don't mix hardware from different pieces.",
           "Confirm move-in date and key pickup logistics with your landlord in writing."
         ]
       },
@@ -137,7 +143,9 @@
           "Set up utilities at the new address: electric, gas, and internet. Long-distance moves often mean providers you've never dealt with — start now.",
           "Finalize what furniture is coming and what's being sold or donated — weight drives long-distance moving costs and you can't change this at the last minute.",
           "If you're shipping a car, confirm the transport company booking and pickup logistics.",
-          "Pack non-essential items now and label every box with contents, room, and a FRAGILE flag where needed.",
+          "Pack non-essential items now. Number every box and photograph inside before sealing — long-distance moves have more handling and things do go missing. Label with contents, room, and FRAGILE where needed.",
+          "When disassembling furniture, put all screws and hardware in a labeled ziplock bag taped directly to that piece — don't lose them in a truck crossing state lines.",
+          "For hanging clothes, use the garbage bag hack: pull a bag up from the bottom of a section of hangers, tie it closed, and re-hang at destination in seconds.",
           "Confirm your move-in date and key handoff logistics with your new landlord in writing — you can't easily swing back if something goes wrong."
         ]
       },
@@ -149,7 +157,9 @@
           "Make sure your renter's insurance is active before move-in day — most policies start the same day you request them online.",
           "Call or go online to set up electric, gas, and internet at your new address — these don't switch on automatically. Give them your exact move-in date.",
           "Start USPS mail forwarding at usps.com — takes 7–10 days to activate.",
-          "Pack non-essential items now: books, out-of-season clothes, extra linens, decor.",
+          "Pack non-essential items now: books, out-of-season clothes, extra linens, decor. Number every box and photograph inside before sealing — you'll be grateful when you can't find something.",
+          "Clothes on hangers: don't fold them. Pull a garbage bag up from the bottom of a section, tie it at the top, and re-hang in the new closet in seconds.",
+          "When disassembling any furniture, put all screws/hardware in a labeled ziplock bag and tape it directly to that piece.",
           "Figure out what kitchen basics you'll need on day one — don't assume you'll have everything. Make a list and shop before move-in day.",
           "Plan your moving day logistics — truck rental, friends, or movers. The 1st and 15th of every month are peak demand; avoid if possible.",
           "Do a pre-move-in walkthrough with timestamped photos before you sign the move-in condition report."
@@ -161,7 +171,8 @@
         steps: [
           "Book movers or a truck today — whatever is available, even if not ideal.",
           "Start USPS mail forwarding immediately at usps.com — every day of delay is a day your mail goes to the wrong address.",
-          "Pack one full room today. Start with the room you use least.",
+          "Pack one full room today. Start with the room you use least. Rule of Three: estimate how many boxes you need, then triple it — everyone underestimates.",
+          "Pack books spread one layer across the bottom of several boxes, not one heavy box full of books. Your back and your movers will thank you.",
           "Call utility providers now to schedule cutoff at the old address and start at the new one.",
           "Schedule internet installation at the new address — ask for the earliest available slot.",
           "Pack a 'move-day essentials' bag for your car (not the truck): charger, medications, change of clothes, toiletries, important documents.",
@@ -175,6 +186,7 @@
           "Book movers immediately — explain you need the earliest available date. Professional help is not optional for a family move this tight.",
           "Arrange childcare and/or pet boarding for moving day today — don't leave this until the week of.",
           "Start USPS mail forwarding at usps.com now and notify your children's school of the transfer date.",
+          "Rule of Three: estimate how many boxes you need, then triple it — everyone underestimates. Books go spread one layer across multiple box bottoms, not one crushing heavy box.",
           "Call utility providers to schedule cutoff at the old address and start at the new one, including internet.",
           "Pack a kids' essentials bag for your car (not the truck): favorite comfort item, medications, chargers, a change of clothes for each child.",
           "Pack one full room of adult non-essentials today. Kids' rooms pack last — they need stability until move day.",
@@ -185,8 +197,9 @@
         title: "Sprint Mode — Long Distance",
         context: "Under 2 weeks for a long-distance move is very tight. Stop evaluating options and start confirming what exists. Speed matters more than optimization right now.",
         steps: [
-          "Confirm your moving company today — if nothing is booked, call 5–10 companies and take the first available licensed option. A licensed mover beats a scrambled DIY across state lines.",
+          "Confirm your moving company today — if nothing is booked, call 5–10 licensed companies and take the first available. Do NOT use a broker; they will sell your move to the cheapest bidder and aren't liable if things go wrong.",
           "Finalize what is coming and what is being left behind — you cannot add to the truck at the last minute on a long-distance move.",
+          "Rule of Three: estimate how many boxes you need, then triple it. Books spread one layer across multiple box bottoms — one box full of books is brutal to move and easy to drop.",
           "Start USPS mail forwarding at usps.com immediately.",
           "Update your address with your bank, credit cards, and employer today — not after you arrive.",
           "Set up utilities at the new address now: call electric, gas, and internet providers and explain your timeline; many can expedite.",
@@ -200,6 +213,7 @@
         steps: [
           "Confirm your lease is signed and you know exactly when and where to pick up keys — do not assume this is handled until you have it in writing.",
           "Set up your utilities today: call electric, gas, and internet providers for your new address and give them your exact move-in date. These won't turn on automatically.",
+          "Rule of Three: estimate how many boxes you'll need, then triple it. First-timers almost always run out. Books go spread one layer across multiple box bottoms — not one heavy box.",
           "Get renter's insurance today — you can get covered in under 10 minutes online. Do it before move-in day.",
           "Start USPS mail forwarding at usps.com immediately.",
           "Book moving help today — truck rental, movers, or friends. End-of-month dates are peak; take whatever is available.",
@@ -212,11 +226,11 @@
         context: "You're in the thick of it. Here's your prioritized list to close out cleanly and land in the new place without chaos.",
         steps: [
           "Finish packing room by room — kitchen and bathroom last since you still need them.",
-          "Confirm your movers or truck reservation for the exact date, time, and address.",
+          "Confirm your movers or truck reservation for the exact date, time, and address. If renting a truck, call to reconfirm 48 hours before pickup — rental companies swap or cancel trucks without notice.",
           "If you haven't started USPS mail forwarding, do it right now — it takes 7–10 days to activate and the clock is running.",
           "Call or log in to transfer electric, gas, and water to your new address with your exact move-in date.",
           "Schedule or confirm internet installation at the new address.",
-          "Set aside a 'first night box' that goes in your car, not the truck: bedding, towel, phone chargers, toiletries, snacks, and a change of clothes.",
+          "Pack a 'first night box' that goes in your car, not the truck: bedding, towel, phone chargers, toiletries, toilet paper, snacks, a change of clothes, and any medications. This box does not leave your sight.",
           "Take photos of your current apartment — every room, every wall, every appliance — before the movers arrive. This is your deposit protection.",
           "Clean as you finish packing each room rather than leaving it all for the end."
         ]
@@ -225,12 +239,13 @@
         title: "Moving Day Mode",
         context: "It's go time. Stop planning and start executing — here's the exact sequence for today.",
         steps: [
+          "Before the movers start loading, photograph every piece of furniture and valuable item with your phone. If anything is damaged in transit, you'll have timestamped proof — without it, claims go nowhere.",
+          "Keep your valuables, important documents, medications, and anything irreplaceable in YOUR car — not the truck. Movers aren't liable for what's not on the inventory sheet.",
           "Load the truck heaviest items first: furniture, appliances, large boxes. Light and fragile items on top.",
-          "Keep your 'essentials bag' in your personal car, not the truck — it goes with you no matter what.",
           "Do a final walk-through of every room, closet, cabinet, and outdoor space before the truck leaves.",
           "Take timestamped photos of every room, wall scuff, and appliance at the old place before you hand over keys.",
           "Return all keys, fobs, mailbox keys, and parking passes — and get written or text confirmation from your landlord.",
-          "At the new place, set up your bedroom and bathroom first — you need a functioning place to sleep and shower before anything else matters.",
+          "At the new place, set up your bed FIRST — make it, put on sheets. After the exhaustion of moving day, you will not have the energy to do this later and it matters more than anything else you could unpack.",
           "Locate the nearest grocery store and pharmacy before it gets dark.",
           "Do not try to unpack everything tonight. Settle in, eat something real, and make a plan for tomorrow."
         ]
@@ -241,7 +256,7 @@
         steps: [
           "Update your driver's license address at your state's DMV — most states require this within 10–30 days of moving.",
           "Update your voter registration at vote.gov — this takes 5 minutes and is easy to forget.",
-          "If you haven't activated USPS mail forwarding yet, do it today at usps.com.",
+          "If you haven't activated USPS mail forwarding yet, do it today at usps.com — it takes 7–10 business days to activate so any day you wait is a day your mail is lost.",
           "Update your address with your bank(s) and credit card companies — log in to each one and change it in profile settings.",
           "Update your address with your employer's HR or payroll system.",
           "Notify your health insurance provider and any other insurance carriers (auto, life) of your new address.",
@@ -337,7 +352,7 @@
 
     function Avatar() {
       return (
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-sm font-bold flex-shrink-0 shadow-sm">
+        <div className="w-7 h-7 rounded-sm bg-stone-900 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
           M
         </div>
       );
@@ -345,12 +360,12 @@
 
     function TypingBubble() {
       return (
-        <div className="flex items-end gap-2 fade-up">
+        <div className="flex items-end gap-2.5 fade-up">
           <Avatar />
-          <div className="bg-white border border-purple-100 shadow-sm rounded-2xl rounded-bl-none px-4 py-3.5 flex gap-1.5 items-center">
-            <span className="dot w-2 h-2 bg-purple-400 rounded-full" />
-            <span className="dot w-2 h-2 bg-purple-400 rounded-full" />
-            <span className="dot w-2 h-2 bg-purple-400 rounded-full" />
+          <div className="bg-white border border-stone-200 rounded-sm px-4 py-3.5 flex gap-1.5 items-center">
+            <span className="dot w-1.5 h-1.5 bg-stone-400 rounded-full" />
+            <span className="dot w-1.5 h-1.5 bg-stone-400 rounded-full" />
+            <span className="dot w-1.5 h-1.5 bg-stone-400 rounded-full" />
           </div>
         </div>
       );
@@ -358,9 +373,9 @@
 
     function BotBubble({ text }) {
       return (
-        <div className="flex items-end gap-2 fade-up">
+        <div className="flex items-end gap-2.5 fade-up">
           <Avatar />
-          <div className="max-w-xs sm:max-w-sm bg-white border border-purple-100 shadow-sm rounded-2xl rounded-bl-none px-4 py-2.5 text-sm text-gray-800 leading-relaxed">
+          <div className="max-w-xs sm:max-w-sm bg-white border border-stone-200 rounded-sm px-4 py-2.5 text-sm text-stone-800 leading-relaxed">
             {text}
           </div>
         </div>
@@ -370,7 +385,7 @@
     function UserBubble({ text }) {
       return (
         <div className="flex justify-end fade-up">
-          <div className="max-w-xs sm:max-w-sm bg-purple-600 rounded-2xl rounded-br-none px-4 py-2.5 text-sm text-white leading-relaxed shadow-sm">
+          <div className="max-w-xs sm:max-w-sm bg-stone-900 rounded-sm px-4 py-2.5 text-sm text-white leading-relaxed">
             {text}
           </div>
         </div>
@@ -385,18 +400,18 @@
         onSelect(key);
       };
       return (
-        <div className="flex flex-wrap gap-2 pl-10 fade-up">
+        <div className="flex flex-wrap gap-2 pl-9 fade-up">
           {options.map(({ key, label }) => (
             <button
               key={key}
               onClick={() => choose(key)}
               disabled={!!picked}
-              className={`px-4 py-2 text-sm font-medium rounded-full border transition-all
+              className={`px-3.5 py-1.5 text-sm font-medium rounded-sm border transition-all
                 ${picked === key
-                  ? "bg-purple-600 border-purple-600 text-white shadow"
+                  ? "bg-stone-900 border-stone-900 text-white"
                   : picked
-                    ? "bg-white border-purple-100 text-purple-300 cursor-default opacity-50"
-                    : "bg-white border-purple-200 text-purple-700 hover:bg-purple-50 hover:border-purple-400 shadow-sm active:scale-95"
+                    ? "bg-white border-stone-200 text-stone-300 cursor-default opacity-40"
+                    : "bg-white border-stone-300 text-stone-700 hover:bg-stone-50 hover:border-stone-600 active:scale-95"
                 }`}
             >
               {label}
@@ -441,45 +456,45 @@
       };
 
       return (
-        <div className="pl-10 fade-up">
-          <div className="bg-white rounded-2xl rounded-tl-none border border-purple-100 shadow-md overflow-hidden pop-in">
+        <div className="pl-9 fade-up">
+          <div className="bg-white border border-stone-200 overflow-hidden pop-in">
 
             {/* Header */}
-            <div className="bg-gradient-to-r from-purple-600 to-purple-700 px-5 py-4 text-white">
-              <p className="text-purple-300 text-xs uppercase tracking-widest font-semibold mb-1">Your Action Plan</p>
-              <h2 className="text-2xl font-bold leading-tight">{path.title}</h2>
+            <div className="bg-stone-900 px-5 py-4 text-white">
+              <p className="text-stone-500 text-xs uppercase tracking-widest font-medium mb-1">Action Plan</p>
+              <h2 className="text-xl font-semibold leading-tight">{path.title}</h2>
             </div>
 
             {/* Context message */}
-            <div className="mx-5 mt-4 mb-3 bg-purple-50 rounded-xl px-4 py-3 border border-purple-100">
-              <p className="text-gray-700 text-sm leading-relaxed">{path.context}</p>
+            <div className="px-5 pt-4 pb-4 border-b border-stone-100">
+              <p className="text-stone-500 text-sm leading-relaxed">{path.context}</p>
             </div>
 
             {/* Steps */}
-            <div className="px-5 pb-4">
-              <div className="flex items-center gap-2 mb-3">
-                <p className="text-xs uppercase tracking-widest text-purple-400 font-semibold">Your action plan</p>
-                <span className="bg-purple-100 text-purple-600 text-xs font-semibold rounded-full px-2 py-0.5">
-                  {path.steps.length} steps
+            <div className="px-5 pt-4 pb-5">
+              <div className="flex items-center gap-2 mb-4">
+                <p className="text-xs uppercase tracking-widest text-stone-400 font-medium">Steps</p>
+                <span className="bg-stone-100 text-stone-500 text-xs font-medium rounded-sm px-1.5 py-0.5">
+                  {path.steps.length}
                 </span>
               </div>
               <div className="flex flex-col gap-3.5">
                 {path.steps.map((step, i) => (
                   <button key={i} onClick={() => toggle(i)} className="flex items-start gap-3 text-left group w-full">
-                    <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 mt-0.5 flex items-center justify-center transition-all duration-200
+                    <div className={`w-4 h-4 rounded-sm border flex-shrink-0 mt-0.5 flex items-center justify-center transition-all duration-150
                       ${checked[i]
-                        ? "bg-purple-600 border-purple-600"
-                        : "border-purple-300 group-hover:border-purple-500 group-hover:bg-purple-50"
+                        ? "bg-stone-900 border-stone-900"
+                        : "border-stone-300 group-hover:border-stone-600"
                       }`}
                     >
                       {checked[i] && (
-                        <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+                        <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                       )}
                     </div>
                     <span className={`text-sm leading-relaxed transition-colors ${
-                      checked[i] ? "line-through text-gray-400" : "text-gray-700 group-hover:text-purple-900"
+                      checked[i] ? "line-through text-stone-400" : "text-stone-700 group-hover:text-stone-900"
                     }`}>
                       {step}
                     </span>
@@ -488,17 +503,17 @@
               </div>
 
               {allDone && (
-                <div className="mt-4 py-2.5 px-4 bg-purple-50 rounded-xl text-center fade-up">
-                  <p className="text-purple-700 font-semibold text-sm">You're absolutely crushing it! 🎉</p>
+                <div className="mt-5 py-3 px-4 bg-stone-50 border border-stone-200 text-center fade-up">
+                  <p className="text-stone-700 font-medium text-sm">All done. You've got this. 🎉</p>
                 </div>
               )}
             </div>
 
             {/* Restart */}
-            <div className="border-t border-purple-50 px-5 py-3">
+            <div className="border-t border-stone-100 px-5 py-3">
               <button
                 onClick={onRestart}
-                className="text-xs text-purple-400 hover:text-purple-600 transition-colors w-full text-center"
+                className="text-xs text-stone-400 hover:text-stone-700 transition-colors w-full text-center"
               >
                 ↩ Start over
               </button>
@@ -600,26 +615,26 @@
       };
 
       return (
-        <div className="min-h-screen flex flex-col bg-gradient-to-b from-purple-50 to-white">
+        <div className="min-h-screen flex flex-col">
 
           {/* Chat header */}
-          <div className="sticky top-0 z-10 bg-white border-b border-purple-100 shadow-sm">
+          <div className="sticky top-0 z-10 bg-white border-b border-stone-200">
             <div className="max-w-lg mx-auto px-4 py-3 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white font-bold text-base shadow">
+              <div className="w-8 h-8 rounded-sm bg-stone-900 flex items-center justify-center text-white font-bold text-sm">
                 M
               </div>
               <div>
-                <h1 className="font-semibold text-gray-900 text-sm leading-none mb-0.5">MoveEasy</h1>
-                <p className="text-xs text-green-500 font-medium">● Online</p>
+                <h1 className="font-semibold text-stone-900 text-sm leading-none mb-0.5">MoveEasy</h1>
+                <p className="text-xs text-emerald-500 font-medium">● Online</p>
               </div>
               <div className="ml-auto">
-                <span className="text-xs text-purple-300 font-medium">Your personal move planner</span>
+                <span className="text-xs text-stone-400 font-medium">Your personal move planner</span>
               </div>
             </div>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 max-w-lg mx-auto w-full px-4 py-5 flex flex-col gap-3">
+          <div className="flex-1 max-w-lg mx-auto w-full px-4 py-6 flex flex-col gap-3">
 
             {msgs.map(msg =>
               msg.type === "bot"
